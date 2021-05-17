@@ -1,0 +1,669 @@
+---
+title: 'SOCIODEMOGRAFIA DA TURMA </br> (AULA 02)'
+subtitle: 'ADM03F - Macroeconomia'
+author: 'Autor: Victor Valerio'
+date: 'Última atualização: `r format(Sys.Date(),"%d-%m-%Y")`'
+output:
+  xaringan::moon_reader:
+    css: [xaringan-themer.css]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+---
+
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+
+
+library(xaringanthemer)
+
+
+style_mono_light(base_color = '#23395b')
+
+
+```
+
+
+```{r xaringan-scribble, echo=FALSE}
+
+
+xaringanExtra::use_scribble()
+
+xaringanExtra::use_search(show_icon = TRUE)
+
+
+```
+
+
+```{r dados, include=FALSE, warning=FALSE}
+
+
+`%>%` <- magrittr::`%>%`
+
+
+
+respostas <- readr::read_csv2('C:/Users/victo/Documents/PROJETOS_R/2021/disciplinas/02_adm03f_apresentacao_da_turma/dados/respostas_2021.csv') %>%
+
+  janitor::clean_names()
+
+
+
+colnames(respostas) <- c('carimbo', 'participante', 'idade', 'naturalidade', 'genero', 'origem_estudo',
+
+                         'religiosidade', 'escolaridade_pai', 'idade_pai', 'escolaridade_mae', 'idade_mae',
+
+                         'religiosidade_pai', 'religiosidade_mae', 'renda_familiar', 'hierarquia', 'jeitinho',
+
+                         'violencia_institucional', 'desenvolvimentismo', 'cotas', 'aborto', 'liberalismo',
+
+                         'homo_masculina', 'homo_feminina', 'censura', 'bolsa_familia', 'primeira_escolha',
+
+                         'segunda_escolha', 'utilitarismo')
+
+
+
+```
+
+
+## TÓPICOS ABORDADOS
+
+
+[**NATURALIDADE DOS ESTUDANTES**](#origem)
+
+
+[**GÊNERO DOS ESTUDANTES**](#genero)
+
+
+[**ORIGEM DA ESCOLARIDADE**](#origem_escolaridade)
+
+
+[**RELIGIOSIDADE DOS ESTUDANTES**](#religiosidade)
+
+
+[**ESCOLARIDADE DOS PAIS**](#escolaridade_pais)
+
+
+[**RENDA FAMILIAR DOS ESTUDANTES**](#renda)
+
+
+[**IDADE DOS PAIS**](#idade_pais)
+
+
+[**CABEÇA DOS ESTUDANTES**](#cabeca_estudantes)
+
+
+[**ANÁLISE DE CORRELAÇÃO**](#correlacao)
+
+
+
+---
+class: inverse, center, middle 
+name: origem
+
+
+## ORIGEM DOS ESTUDANTES
+
+
+---
+
+
+## ORIGEM DOS ESTUDANTES
+
+
+```{r, echo = F, fig.align = 'center', dpi = 300}
+
+
+p1 <- respostas %>%
+  
+  dplyr::transmute(Naturalidade = naturalidade) %>% 
+    
+  dplyr::group_by(Naturalidade) %>% 
+  
+  dplyr::summarise(Quantidade = dplyr::n()) %>% 
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_col(mapping = ggplot2::aes(x = Quantidade, y = Naturalidade), 
+                    
+                    fill = '#23395b',
+                    
+                    width = 0.5) +
+
+  ggplot2::labs(y = 'Naturalidade dos Estudantes',
+
+                x = 'Total de Estudantes') +
+
+  ggplot2::scale_x_continuous(breaks = seq(0,40,2)) +
+  
+  xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20)
+
+
+p1 <- plotly::ggplotly(p1)
+
+
+widgetframe::frameWidget(p1, width = '100%', height = '100%')
+
+
+```
+
+
+---
+class: inverse, center, middle 
+name: genero
+
+
+## GÊNERO DOS ESTUDANTES
+
+
+---
+
+
+## GÊNERO DOS ESTUDANTES
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 3, dpi = 300}
+
+
+p2 <- respostas %>%
+  
+  dplyr::transmute(Gênero = genero) %>% 
+    
+  dplyr::group_by(Gênero) %>% 
+  
+  dplyr::summarise(Quantidade = dplyr::n()) %>% 
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_col(mapping = ggplot2::aes(x = Quantidade, y = `Gênero`), 
+                    
+                    fill = '#23395b',
+                    
+                    width = 0.25) +
+
+  ggplot2::labs(y = 'Identificação de Gênero',
+
+                x = 'Total de Estudantes') +
+
+  ggplot2::scale_x_continuous(breaks = seq(0,40,2)) +
+  
+  xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20) 
+
+
+p2 <- plotly::ggplotly(p2)
+
+
+widgetframe::frameWidget(p2, width = '100%', height = '100%')
+
+
+```
+
+
+---
+class: inverse, center, middle 
+name: origem_escolaridade
+
+
+
+## ORIGEM DA ESCOLARIDADE
+
+
+---
+
+
+## ORIGEM DA ESCOLARIDADE
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 3, dpi = 300}
+
+p3 <- respostas %>%
+  
+  dplyr::transmute('Origem do Estudo' = origem_estudo) %>% 
+    
+  dplyr::group_by(`Origem do Estudo`) %>% 
+  
+  dplyr::summarise(Quantidade = dplyr::n()) %>% 
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_col(mapping = ggplot2::aes(x = Quantidade, y = `Origem do Estudo`), 
+                    
+                    fill = '#23395b',
+                    
+                    width = 0.5) +
+
+  ggplot2::labs(y = 'Origem da Escolaridade',
+
+                x = 'Total de Estudantes') +
+
+  ggplot2::scale_x_continuous(breaks = seq(0,40,2)) +
+  
+  xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20) 
+
+
+p3 <- plotly::ggplotly(p3)
+
+
+widgetframe::frameWidget(p3, width = '100%', height = '100%')
+
+
+```
+
+
+---
+class: inverse, center, middle 
+name: religiosidade
+
+
+## RELIGIOSIDADE DOS ESTUDANTES
+
+
+---
+
+
+## RELIGIOSIDADE DOS ESTUDANTES
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 3, dpi = 300}
+
+
+p4 <- respostas %>%
+  
+  dplyr::transmute('Religiosidade' = religiosidade) %>% 
+    
+  dplyr::group_by(Religiosidade) %>% 
+  
+  dplyr::summarise(Quantidade = dplyr::n()) %>% 
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_col(mapping = ggplot2::aes(x = Quantidade, y = Religiosidade), 
+                    
+                    fill = '#23395b',
+                    
+                    width = 0.25) +
+
+  ggplot2::labs(y = 'Religiosidade',
+
+                x = 'Total de Estudantes') +
+
+  ggplot2::scale_x_continuous(breaks = seq(0,22,2)) +
+  
+  xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20) 
+
+
+p4 <- plotly::ggplotly(p4)
+
+
+widgetframe::frameWidget(p4, width = '100%', height = '100%')
+
+
+
+```
+
+
+---
+class: inverse, center, middle 
+name: escolaridade_pais
+
+
+## ESCOLARIDADE DOS PAIS
+
+
+---
+
+
+## ESCOLARIDADE DOS PAIS
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 3, dpi = 300}
+
+
+pai <- respostas %>%
+
+  dplyr::select(participante, escolaridade_pai, escolaridade_mae) %>%
+
+  tidyr::pivot_longer(-participante, names_to = 'ref', values_to = 'escolaridade') %>%
+  
+  dplyr::filter(ref == 'escolaridade_pai') %>%
+  
+  dplyr::transmute('Escolaridade' = escolaridade) %>% 
+  
+  dplyr::group_by(Escolaridade) %>% 
+  
+  dplyr::summarise(Quantidade = dplyr::n()) %>% 
+  
+  dplyr::mutate(Referência = 'Pai')
+
+
+mae <- respostas %>%
+
+  dplyr::select(participante, escolaridade_pai, escolaridade_mae) %>%
+
+  tidyr::pivot_longer(-participante, names_to = 'ref', values_to = 'escolaridade') %>%
+  
+  dplyr::filter(ref == 'escolaridade_mae') %>%
+  
+  dplyr::transmute('Escolaridade' = escolaridade) %>% 
+  
+  dplyr::group_by(Escolaridade) %>% 
+  
+  dplyr::summarise(Quantidade = dplyr::n()) %>% 
+  
+  dplyr::mutate(Referência = 'Mãe')
+
+
+consolidado <- rbind(pai, mae) 
+
+
+p5 <- consolidado %>% 
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_col(mapping = ggplot2::aes(x = Quantidade, y = Escolaridade, fill = `Referência`), 
+                    
+                    position = ggplot2::position_dodge2(preserve = 'single'),
+                    
+                    width = 0.75) +
+
+  ggplot2::labs(y = 'Nível de Escolaridade',
+
+                x = 'Quantidade Total',
+
+                fill = '') +
+
+  ggplot2::scale_x_continuous(breaks = seq(0,21,1)) +
+  
+  ggplot2::theme(legend.position = 'bottom') +
+  
+  xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20) +
+  
+  ggplot2::scale_fill_manual(labels = c('Mãe', 'Pai'),
+                             
+                             values = c('#4A3844', '#23395b'))
+
+
+p5 <- plotly::ggplotly(p5)
+
+
+widgetframe::frameWidget(p5, width = '100%', height = '100%')
+
+
+
+```
+
+
+---
+class: inverse, center, middle 
+name: renda
+
+
+## RENDA FAMILIAR DOS ESTUDANTES
+
+
+---
+
+
+## RENDA FAMILIAR DOS ESTUDANTES
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 3, dpi = 300, warning = FALSE}
+
+
+p6 <- respostas %>%
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_boxplot(mapping = ggplot2::aes(y = renda_familiar),
+                        
+                        fill = '#23395b', 
+                        
+                        alpha = 0.5) +
+
+  ggplot2::labs(y = 'Renda',
+
+                x = '') +
+
+  ggplot2::scale_y_continuous(labels = scales::dollar_format(prefix = 'R$', big.mark = '.')) +
+
+  ggplot2::theme(axis.text.x = ggplot2::element_blank()) +
+  
+  xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20) 
+
+
+p6 <- plotly::ggplotly(p6)
+
+
+widgetframe::frameWidget(p6, width = '100%', height = '100%')
+
+
+```
+
+
+---
+class: inverse, center, middle 
+name: idade_pais
+
+
+## IDADE DOS PAIS
+
+
+---
+
+
+## IDADE DOS PAIS
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 3, dpi = 300}
+
+
+p7 <- respostas %>%
+
+  dplyr::select(participante, idade, idade_pai, idade_mae) %>%
+
+  tidyr::pivot_longer(-participante, names_to = 'ref', values_to = 'idades') %>%
+  
+  dplyr::mutate(ref = dplyr::case_when(ref == 'idade' ~ 'Estudante',
+                                       ref == 'idade_mae' ~ 'Mãe',
+                                       ref == 'idade_pai' ~ 'Pai')) %>% 
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_boxplot(mapping = ggplot2::aes(x = ref, y = idades), 
+                        
+                        fill = '#23395b',
+                        
+                        alpha = 0.5) +
+
+  ggplot2::labs(y = 'Idades',
+
+                x = '',
+
+                fill = '') +
+
+  ggplot2::scale_y_continuous(limits = c(10,75),
+                              
+                              breaks = seq(10,80,10)) +
+
+  ggplot2::scale_fill_manual(labels = c('Estudante','Mãe', 'Pai'),
+
+                             values = c('#3E4635', '#4A3844', '#23395b')) +
+  
+   xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20) 
+
+
+p7 <- plotly::ggplotly(p7)
+
+
+widgetframe::frameWidget(p7, width = '100%', height = '100%')
+
+
+```
+
+
+---
+class: inverse, center, middle 
+name: cabeca_estudantes
+
+
+## A CABEÇA DOS ESTUDANTES
+
+
+---
+
+
+## A CABEÇA DOS ESTUDANTES
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 3, dpi = 300}
+
+
+p8 <- respostas %>%
+
+  dplyr::select(participante, hierarquia, jeitinho,
+
+                violencia_institucional, desenvolvimentismo, cotas, aborto, liberalismo,
+
+                homo_masculina, homo_feminina, censura, bolsa_familia, utilitarismo) %>%
+
+  tidyr::pivot_longer(-participante, names_to = 'ref', values_to = 'social') %>%
+
+  ggplot2::ggplot() +
+
+  ggplot2::geom_boxplot(mapping = ggplot2::aes(x = ref, y = social), 
+                        
+                        fill = '#23395b', 
+                        
+                        alpha = 0.5) +
+  
+  ggplot2::coord_flip() +
+
+  ggplot2::labs(x = 'Item analisado',
+
+                y = '',
+
+                fill = '') +
+
+  ggplot2::scale_y_continuous(breaks = seq(1, 6, 1)) +
+
+  ggplot2::theme(legend.position = 'none') +
+
+  ggplot2::scale_x_discrete(labels = c('Aborto',
+
+                                       'Bolsa Família',
+
+                                       'Censura',
+
+                                       'Cotas',
+
+                                       'Desenvolvimentismo',
+
+                                       'Hierarquia',
+
+                                       'Homoafetividade Feminina',
+
+                                       'Homoafetividade Masculina',
+
+                                       'Jeitinho Brasileiro',
+
+                                       'Liberalismo',
+
+                                       'Utilitarismo',
+
+                                       'Violência Institucional')) +
+  
+   xaringanthemer::theme_xaringan(text_font_size = 15,
+                                 
+                                 title_font_size = 20) 
+
+
+p8 <- plotly::ggplotly(p8)
+
+
+widgetframe::frameWidget(p8, width = '100%', height = '100%')
+
+
+```
+
+
+---
+
+class: inverse, center, middle 
+name: correlacao
+
+
+## ANÁLISE DE CORRELAÇÃO
+
+
+---
+
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 7, fig.height = 4.3, dpi = 300}
+
+
+correlacao <- respostas %>%
+
+  dplyr::mutate(genero = ifelse(genero == 'Masculino', 1, 0),
+
+                origem_estudo = dplyr::case_when(origem_estudo == 'Apenas em escola pública' ~ 1,
+
+                                                 origem_estudo == 'Majoritariamente em escola pública' ~ 2,
+
+                                                 origem_estudo == 'Majoritariamente em escola privada' ~ 3,
+
+                                                 origem_estudo == 'Apenas em escola privada' ~ 4),
+
+                religiosidade = ifelse(religiosidade == 'Sim', 1, 0),
+
+                religiosidade_pai = ifelse(religiosidade_pai == 'Sim', 1, 0),
+
+                religiosidade_mae = ifelse(religiosidade_mae == 'Sim', 1, 0),
+
+                escolaridade_pai = dplyr::case_when(escolaridade_pai == 'Sem escolaridade' ~ 1,
+                                                    escolaridade_pai == 'Ensino básico (até 4º ano - primeiro grau)' ~ 2,
+                                                    escolaridade_pai == 'Ensino fundamental (até 9º ano - primeiro grau)' ~ 3,
+                                                    escolaridade_pai == 'Ensino Médio (até 3º ano - segundo grau)' ~ 4,
+                                                    escolaridade_pai == 'Graduação' ~ 5,
+                                                    escolaridade_pai == 'Mestrado' ~ 6,
+                                                    escolaridade_pai == 'Doutorado' ~ 7,
+                                                    escolaridade_pai == 'Pós-Doutorado' ~ 8),
+
+                escolaridade_mae = dplyr::case_when(escolaridade_mae == 'Sem escolaridade' ~ 1,
+                                                    escolaridade_mae == 'Ensino básico (até 4º ano - primeiro grau)' ~ 2,
+                                                    escolaridade_mae == 'Ensino fundamental (até 9º ano - primeiro grau)' ~ 3,
+                                                    escolaridade_mae == 'Ensino Médio (até 3º ano - segundo grau)' ~ 4,
+                                                    escolaridade_mae == 'Graduação' ~ 5,
+                                                    escolaridade_mae == 'Mestrado' ~ 6,
+                                                    escolaridade_mae == 'Doutorado' ~ 7,
+                                                    escolaridade_mae == 'Pós-Doutorado' ~ 8)) %>%
+
+  dplyr::select(- carimbo, - participante, - naturalidade, - primeira_escolha, - segunda_escolha)
+
+
+correlacao <- Hmisc::rcorr(as.matrix(correlacao))
+
+
+corrplot::corrplot(correlacao$r, p.mat = correlacao$P, sig.level = 0.005, type = 'lower')
+
+
+
+```
+
+
+
